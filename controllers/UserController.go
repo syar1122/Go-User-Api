@@ -3,7 +3,7 @@ package controllers
 import (
 	initializers "Basic/Auth-Api/Initializers"
 	models "Basic/Auth-Api/Models"
-	"log"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,40 +16,19 @@ func ListUsers(c *gin.Context) {
 	c.JSON(200, &users)
 }
 
-func PostUser(c *gin.Context) {
-
-	var body struct {
-		FullName   string
-		Password   string
-		Username   string
-		ProfileImg string
-		RoleId     int
-		Status     models.Status
-	}
-	c.Bind(&body)
-	user := models.User{FullName: body.FullName, Password: body.Password, Username: body.Username, ProfileImg: body.ProfileImg, RoleId: body.RoleId, Status: int8(body.Status)}
-	result := initializers.DB.Create(&user).Preload("Role").First(&user)
-
-	if result.Error != nil {
-		c.Status(400)
-		log.Panic(result.Error)
-		return
-	}
-
-	c.JSON(200, gin.H{
-		"user": &user,
-	})
-}
-
 func GetUser(c *gin.Context) {
 	id := c.Param("id")
-	var user models.User
+	if n, err := strconv.Atoi(id); err == nil {
+		user, err := models.GetUserByID(uint(n))
+		if err == nil {
+			c.JSON(200, gin.H{
+				"user": &user,
+			})
+		}
+	} else {
+		c.Status(400)
+	}
 
-	initializers.DB.Preload("Role").First(&user, id)
-
-	c.JSON(200, gin.H{
-		"user": &user,
-	})
 }
 
 func UpdateUser(c *gin.Context) {

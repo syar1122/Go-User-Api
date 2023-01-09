@@ -11,25 +11,31 @@ import (
 func init() {
 	initializers.LoadEnvVariables()
 	initializers.ConnectToDb()
+	initializers.ConnectToRedis()
 }
 
 func main() {
-	r := gin.Default()
-	r.POST("/roles", controllers.PostRole)
-	r.GET("/roles", controllers.ListRoles)
-	r.GET("/roles/:id", controllers.GetRole)
 
-	r.POST("/users", controllers.PostUser)
-	r.GET("/users", controllers.ListUsers)
-	r.GET("/users/:id", controllers.GetUser)
-	r.PUT("/users/:id", controllers.UpdateUser)
-	r.DELETE("/users/:id", controllers.DeleteUser)
+	r := gin.Default()
 
 	r.POST("/login", controllers.Login)
+	r.POST("/register", controllers.Register)
+
+	authenticated := r.Group("/api")
+	authenticated.Use(middlewares.JwtAuthMiddleware())
+	authenticated.GET("/userinfo", controllers.CurrentUser)
+	authenticated.GET("/users", controllers.ListUsers)
+	authenticated.GET("/users/:id", controllers.GetUser)
 
 	protected := r.Group("/api/admin")
 	protected.Use(middlewares.JwtAuthMiddleware())
-	protected.GET("/userinfo", controllers.CurrentUser)
+	protected.Use(middlewares.RoleBaseAuthmiddleware("admin"))
+	protected.PUT("/users/:id", controllers.UpdateUser)
+	protected.DELETE("/users/:id", controllers.DeleteUser)
+
+	protected.POST("/roles", controllers.PostRole)
+	protected.GET("/roles", controllers.ListRoles)
+	protected.GET("/roles/:id", controllers.GetRole)
 
 	r.Run()
 }

@@ -25,5 +25,14 @@ services:
     restart: always
     ports:
       - 8081:80
+  cache:
+    image: redis
+    restart: always
+    ports:
+      - '6379:6379'
+    volumes: 
+      - cache:/data
 volumes:
   dbdata:
+  cache:
+    driver: local
