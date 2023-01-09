@@ -26,6 +26,8 @@ func main() {
 	authenticated.GET("/userinfo", controllers.CurrentUser)
 	authenticated.GET("/users", controllers.ListUsers)
 	authenticated.GET("/users/:id", controllers.GetUser)
+	authenticated.PUT("/profile-img", controllers.UpdateProfileImg)
+	authenticated.DELETE("/profile-img", controllers.RemoveProfileImg)
 
 	protected := r.Group("/api/admin")
 	protected.Use(middlewares.JwtAuthMiddleware())

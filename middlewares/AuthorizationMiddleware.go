@@ -20,7 +20,7 @@ func RoleBaseAuthmiddleware(role string) gin.HandlerFunc {
 		}
 		uid, errs := token.ExtractTokenID(c)
 
-		user, err := models.GetUserByID(uint(uid))
+		user, err := models.GetUserByID(uid)
 		log.Println(&user)
 		if err != nil {
 			c.String(http.StatusUnauthorized, "Unauthorized 2")

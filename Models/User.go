@@ -16,22 +16,20 @@ type User struct {
 
 	FullName   string `json:"fulllName" binding:"required"`
 	Password   string `json:"password" binding:"required,min=8,max=15"`
-	Username   string `json:"userName" binding:"required,alpha"`
-	ProfileImg string `json:"profileImg" binding:"required"`
+	Username   string `gorm:"unique" json:"userName" binding:"required,alpha"`
+	ProfileImg string `json:"profileImg,omitempty" binding:"required"`
 	RoleId     int    `json:"roleId" binding:"required"`
 	Role       Role   `json:"role"`
 	Status     int8   `json:"status" binding:"required"`
 }
 
-func GetUserByID(uid uint) (User, error) {
+func GetUserByID(uid int) (User, error) {
 
 	var u User
 
 	if err := initializers.DB.Preload("Role").First(&u, uid).Error; err != nil {
 		return u, errors.New("User not found!")
 	}
-
-	u.PrepareGive()
 
 	return u, nil
 

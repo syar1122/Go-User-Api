@@ -1,7 +1,7 @@
 package initializers
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/go-redis/redis"
 )
@@ -17,9 +17,9 @@ func ConnectToRedis() {
 
 	pong, err := Client.Ping().Result()
 	if err == nil {
-		fmt.Println("Redis Connecdted !!!", pong)
+		log.Println("Redis Connecdted !!!", pong)
 
 	} else {
-		fmt.Println("Redis Error ", err)
+		log.Println("Redis Error ", err)
 	}
 }

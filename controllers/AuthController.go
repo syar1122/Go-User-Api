@@ -19,6 +19,7 @@ func CurrentUser(c *gin.Context) {
 	}
 
 	u, err := models.GetUserByID(user_id)
+	u.PrepareGive()
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -59,13 +60,12 @@ func Login(c *gin.Context) {
 }
 
 type RegisterInput struct {
-	FullName   string      `json:"fullName" binding:"required"`
-	Password   string      `json:"password" binding:"required,min=8,max=15"`
-	Username   string      `json:"userName" binding:"required,alpha"`
-	ProfileImg string      `json:"profileImg" binding:"required"`
-	RoleId     int         `json:"roleId" binding:"required"`
-	Role       models.Role `json:"role"`
-	Status     int8        `json:"status" binding:"required,min=1,max=2"`
+	FullName string      `json:"fullName" binding:"required"`
+	Password string      `json:"password" binding:"required,min=8,max=15"`
+	Username string      `json:"userName" binding:"required,alpha"`
+	RoleId   int         `json:"roleId" binding:"required"`
+	Role     models.Role `json:"role"`
+	Status   int8        `json:"status" binding:"required,min=1,max=2"`
 }
 
 func Register(c *gin.Context) {
@@ -82,7 +82,7 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	user := models.User{FullName: body.FullName, Password: body.Password, Username: body.Username, ProfileImg: body.ProfileImg, RoleId: body.RoleId, Status: body.Status}
+	user := models.User{FullName: body.FullName, Password: body.Password, Username: body.Username, RoleId: body.RoleId, Status: body.Status}
 	result := initializers.DB.Create(&user).Preload("Role").First(&user)
 
 	if result.Error != nil {
