@@ -22,7 +22,7 @@ func ConnectToDb() {
 			SlowThreshold:             time.Second,   // Slow SQL threshold
 			LogLevel:                  logger.Silent, // Log level
 			IgnoreRecordNotFoundError: true,          // Ignore ErrRecordNotFound error for logger
-			Colorful:                  false,         // Disable color
+			Colorful:                  true,          // Disable color
 		},
 	)
 
