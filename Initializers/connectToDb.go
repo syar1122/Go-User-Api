@@ -1,6 +1,7 @@
 package initializers
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"time"
@@ -16,6 +17,7 @@ func ConnectToDb() {
 
 	var err error
 	dsn := os.Getenv("DB_CONNECTION_STRING")
+	fmt.Println("DATABASE_DSN", dsn)
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
 		logger.Config{

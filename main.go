@@ -40,4 +40,22 @@ func main() {
 	protected.GET("/roles/:id", controllers.GetRole)
 
 	r.Run()
+
+	// arr := []int{1, 2, 2, 3, 4, 5, 6, 7, 8, 5, 9, 9, 10}
+	// filt := []int{}
+	// dupArr := []int{}
+	// for _, v := range arr {
+	// 	for _, v2 := range filt {
+	// 		if v == v2 {
+	// 			dupArr = append(dupArr, v)
+	// 			break
+	// 		}
+	// 	}
+	// 	filt = append(filt, v)
+
+	// }
+
+	// for _, vf := range dupArr {
+	// 	fmt.Println(vf)
+	// }
 }
